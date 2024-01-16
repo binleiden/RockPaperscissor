@@ -1,36 +1,97 @@
-//--------------------First Part-------------------------
-// randomly generates Rock, Paper or Scissors
-function getComputerChoice() {
-    let choice = ["Rock", "Paper", "Scissor"]
-    let computerChoice = Math.floor(Math.random() * choice.length);
-    return choice[computerChoice];
-       
+function computerPlay(){
+  //test
+  let number = Math.floor(Math.random()*3);
+  if (number === 0){
+      return 'Rock';
+  }
+  if (number === 1){
+      return 'Paper';
+  }
+  if (number === 2){
+      return 'Scissors'
+  }
 }
 
-//-------------Second Part--------------------------------
+function playerSelection(){
+  //No default text could result in issues***
+  let choice = window.prompt("Choose 'Rock', 'Paper', or 'Scissors'").toLowerCase();
+  return choice.charAt(0).toUpperCase() + choice.slice(1);
+}
 
-// play a single round of the game (this is the game logic)
-
-function playRound(playerSelection, computerSelection) {
-    if ((playerSelection == "Rock" && computerSelection == "Scissor") ||
-    (playerSelection == "Scissor" && computerSelection == "Paper")||
-    (playerSelection == "Paper" && computerSelection == "Rock")) {
-        return "You Win";
-    } else if (playerSelection == computerSelection) {
-        return "Draw";
-    } else {
-        return "You Loose";
-    }
+function playRound(e){
+  playerSelection = e.srcElement.id;
+  computerSelection = computerPlay();
+  console.log(playerSelection)
+  console.log(computerSelection);
+  if (playerSelection === computerSelection){
+      updateScore("Tie. " + playerSelection + " ties " + computerSelection);
   }
-
-  //-----------Final Part-------------------------------------
-  
-  // Program to get player selection
-  function game() {
-    for (let i = 0; i < 5; i++) {
-      let playerSelection = prompt("Enter Rock, Paper or Scissors - CaseSensetive");
-      let computerSelection = getComputerChoice();
-      console.log(playRound(playerSelection, computerSelection));
-    }
+  if((playerSelection === 'Rock') && (computerSelection === "Scissors")){
+      playerScore++
+      updateScore("You Win! Rock beats Scissors");
   }
-  game();
+  if((playerSelection === 'Rock') && (computerSelection === "Paper")){
+      computerScore++
+      updateScore("You Lose! Paper beats Rock");
+  }
+  if((playerSelection === 'Paper') && (computerSelection === "Rock")){
+      playerScore++
+      updateScore("You Win! Paper beats Rock");
+  }
+  if((playerSelection === 'Paper') && (computerSelection === "Scissors")){
+      computerScore++
+      updateScore("You Lose! Scissors beats Paper");
+  }
+  if((playerSelection === 'Scissors') && (computerSelection === "Paper")){
+      playerScore++
+      updateScore("You Win! Scissors beats Paper");
+  }
+  if((playerSelection === 'Scissors') && (computerSelection === "Rock")){
+      computerScore++
+      updateScore("You Lose! Rock beats Scissors");
+  }
+}
+
+function updateScore(outcome){
+  document.getElementById("results").innerHTML = outcome;
+  document.getElementById("score").innerHTML = `Player: ${playerScore} || Computer: ${computerScore}`;
+  checkWin();
+}
+
+function checkWin(){
+  if(computerScore == 5){
+      alert("You Lose!");
+      computerScore = 0;
+      playerScore = 0;
+  }
+  if(playerScore == 5){
+      alert("You Win!");
+      computerScore = 0;
+      playerScore = 0;
+  }
+}
+
+function game(){
+
+  //console.log(playRound(playerSelection(), computerPlay()));
+  if(playerScore < computerScore){
+      console.log("You lose :(");
+  }
+  else if(playerScore == computerScore){
+      console.log("You tied :/");
+  }
+  else{
+      console.log("You win!!!");
+  }
+}
+
+let playerScore = 0;
+let computerScore = 0;
+
+let buttons = document.querySelectorAll('.choices');
+buttons.forEach((btn) => {
+  btn.addEventListener("click", playRound);
+});
+
+
+game();
